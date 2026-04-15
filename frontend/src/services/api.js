@@ -3,7 +3,9 @@
  */
 import axios from 'axios';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// En desarrollo: localhost:8000
+// En producción: /api (reescrito por vercel.json a educationia-backend.onrender.com)
+const API_BASE = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_BASE,
