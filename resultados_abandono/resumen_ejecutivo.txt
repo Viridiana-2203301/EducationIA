@@ -1,0 +1,21 @@
+======================================================================
+   RESUMEN EJECUTIVO - PREDICCIÓN DE ABANDONO ESCOLAR
+======================================================================
+
+Fecha: 2026-04-14 17:40:40
+
+Tasa de abandono encontrada: 1.43%
+Mejor modelo: Random Forest
+AUC-ROC: 1.0000
+F1-Score: 1.0000
+Recall: 1.0000
+
+Top 3 Factores de Riesgo:
+  1. egresados (importancia: 0.2493)
+  2. alumnos_2 (importancia: 0.1008)
+  3. grupos_01 (importancia: 0.0785)
+
+Resultados por modelo:
+  Regresión Logística: AUC=0.9993, F1=0.5261, Acc=0.9742, Rec=1.0000
+  Random Forest: AUC=1.0000, F1=1.0000, Acc=1.0000, Rec=1.0000
+  XGBoost: AUC=1.0000, F1=1.0000, Acc=1.0000, Rec=1.0000

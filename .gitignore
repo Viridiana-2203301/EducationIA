@@ -1,0 +1,38 @@
+# === Entorno virtual de Python ===
+EducationIA/
+
+# === Datos pesados (GitHub límite 100MB) ===
+*.csv
+backend/data/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+env/
+.venv/
+
+# === Modelos entrenados ===
+resultados_abandono/modelos/
+
+# === Node.js / Next.js ===
+node_modules/
+frontend/.next/
+frontend/out/
+
+# === IDE / Editor ===
+.vscode/
+.idea/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Agents / Gemini ===
+.agents/
+skills-lock.json
