@@ -9,7 +9,7 @@ const API_BASE = process.env.NODE_ENV === 'production' ? '/api' : 'http://localh
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 120000, // 2 min for heavy analysis
+  timeout: 600000, // 10 minutes for heavy analysis (increased from 2 min)
   headers: { 'Accept': 'application/json' },
 });
 
@@ -19,7 +19,7 @@ export async function uploadFiles(files) {
   files.forEach(file => formData.append('files', file));
   const res = await api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-    timeout: 300000,
+    timeout: 600000, // 10 minutes for heavy uploads
   });
   return res.data;
 }
