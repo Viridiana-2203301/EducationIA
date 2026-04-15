@@ -91,7 +91,8 @@ def _profile_column(series: pd.Series, col_name: str) -> ColumnProfile:
     # Try to detect dates in string columns
     if not is_datetime and series.dtype == object and len(non_null) > 0:
         try:
-            parsed = pd.to_datetime(non_null.head(20), infer_datetime_format=True, errors="coerce")
+            # pandas 2.0+ deprecated infer_datetime_format, now uses default strict parsing
+            parsed = pd.to_datetime(non_null.head(20), errors="coerce", format="mixed")
             if parsed.notna().sum() > len(parsed) * 0.7:
                 is_datetime = True
         except Exception:

@@ -133,7 +133,7 @@ def run_full_pipeline(request: Optional[AnalysisRequest] = None) -> AnalysisResu
             ds_info_map = {ds.id: ds for ds in datasets}
             graph = build_relationship_graph(ds_info_map, relationships)
             storage.store_graph(graph)
-            logger.info(f"[Pipeline] Graph built with {len(graph)} edges")
+            logger.info("[Pipeline] Graph built successfully")
         except Exception as e:
             logger.error(f"[Pipeline] Graph building failed: {str(e)}")
 
