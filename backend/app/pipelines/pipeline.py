@@ -115,19 +115,30 @@ def run_full_pipeline(request: Optional[AnalysisRequest] = None) -> AnalysisResu
         # --- Step 5: Fuse Datasets ---
         from app.services.fusion import auto_concat_datasets, auto_fuse_datasets, reduce_fused_dimensions
         
-        # 5a. Concatenate datasets with matching headers
-        fused_dfs = auto_concat_datasets(cleaned_dfs, ds_names)
-        logger.info(f"[Pipeline] Concatenated {len(fused_dfs)} datasets")
+        fused_dfs = {}
         
-        # 5b. Relational fusion for remaining relationships
-        relational_dfs = auto_fuse_datasets(cleaned_dfs, relationships, ds_names)
-        fused_dfs.update(relational_dfs)
-        logger.info(f"[Pipeline] Relational fusion: {len(relational_dfs)} new fused datasets")
+        try:
+            # 5a. Concatenate datasets with matching headers
+            fused_dfs = auto_concat_datasets(cleaned_dfs, ds_names)
+            logger.info(f"[Pipeline] Concatenated {len(fused_dfs)} datasets")
+        except Exception as e:
+            logger.error(f"[Pipeline] Auto-concat failed: {str(e)}")
         
-        # 5c. Reducir dimensiones con PCA
-        pca_dfs = reduce_fused_dimensions(fused_dfs)
-        fused_dfs.update(pca_dfs)
-        logger.info(f"[Pipeline] PCA reduction: {len(pca_dfs)} PCA datasets")
+        try:
+            # 5b. Relational fusion for remaining relationships
+            relational_dfs = auto_fuse_datasets(cleaned_dfs, relationships, ds_names)
+            fused_dfs.update(relational_dfs)
+            logger.info(f"[Pipeline] Relational fusion: {len(relational_dfs)} new fused datasets")
+        except Exception as e:
+            logger.error(f"[Pipeline] Relational fusion failed: {str(e)}")
+        
+        try:
+            # 5c. Reducir dimensiones con PCA
+            pca_dfs = reduce_fused_dimensions(fused_dfs)
+            fused_dfs.update(pca_dfs)
+            logger.info(f"[Pipeline] PCA reduction: {len(pca_dfs)} PCA datasets")
+        except Exception as e:
+            logger.error(f"[Pipeline] PCA reduction failed: {str(e)}")
         
         for key, fused_df in fused_dfs.items():
             storage.store_fused_dataframe(key, fused_df)
@@ -143,28 +154,43 @@ def run_full_pipeline(request: Optional[AnalysisRequest] = None) -> AnalysisResu
             logger.info(f"[Pipeline] Analysis dataframe: {len(analysis_df)} rows x {len(analysis_df.columns)} cols")
             # Correlation
             if request.run_correlation:
-                logger.info("[Pipeline] Computing correlations")
-                results.correlations = compute_correlations(analysis_df)
+                try:
+                    logger.info("[Pipeline] Computing correlations")
+                    results.correlations = compute_correlations(analysis_df)
+                except Exception as e:
+                    logger.error(f"[Pipeline] Correlation failed: {str(e)}")
 
             # Clustering
             if request.run_clustering:
-                logger.info("[Pipeline] Computing clustering")
-                results.clusters = compute_clustering(analysis_df)
+                try:
+                    logger.info("[Pipeline] Computing clustering")
+                    results.clusters = compute_clustering(analysis_df)
+                except Exception as e:
+                    logger.error(f"[Pipeline] Clustering failed: {str(e)}")
 
             # PCA
             if request.run_pca:
-                logger.info("[Pipeline] Computing PCA")
-                results.pca = compute_pca(analysis_df)
+                try:
+                    logger.info("[Pipeline] Computing PCA")
+                    results.pca = compute_pca(analysis_df)
+                except Exception as e:
+                    logger.error(f"[Pipeline] PCA failed: {str(e)}")
 
             # Anomaly Detection
             if request.run_anomaly_detection:
-                logger.info("[Pipeline] Detecting anomalies")
-                results.anomalies = detect_anomalies(analysis_df)
+                try:
+                    logger.info("[Pipeline] Detecting anomalies")
+                    results.anomalies = detect_anomalies(analysis_df)
+                except Exception as e:
+                    logger.error(f"[Pipeline] Anomaly detection failed: {str(e)}")
 
             # Trend Analysis
             if request.run_trend_analysis:
-                logger.info("[Pipeline] Analyzing trends")
-                results.trends = analyze_trends(analysis_df)
+                try:
+                    logger.info("[Pipeline] Analyzing trends")
+                    results.trends = analyze_trends(analysis_df)
+                except Exception as e:
+                    logger.error(f"[Pipeline] Trend analysis failed: {str(e)}")
         else:
             logger.warning("[Pipeline] No valid analysis dataframe")
 
