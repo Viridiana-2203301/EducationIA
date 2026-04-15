@@ -4,9 +4,17 @@ FastAPI application with CORS support and API routers.
 """
 
 import os
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import upload, datasets, analysis, relationships, insights, fused
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Create data directories
 for dir_name in ["data/raw", "data/processed", "data/temp"]:

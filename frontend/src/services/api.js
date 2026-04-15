@@ -42,7 +42,15 @@ export async function getDatasetPreview(id, rows = 20) {
 
 // --- Analysis ---
 export async function runAnalysis(options = {}) {
-  const res = await api.post('/analysis/run', options);
+  const requestPayload = {
+    dataset_ids: options.dataset_ids || null,
+    run_correlation: options.run_correlation !== false,
+    run_clustering: options.run_clustering !== false,
+    run_pca: options.run_pca !== false,
+    run_anomaly_detection: options.run_anomaly_detection !== false,
+    run_trend_analysis: options.run_trend_analysis !== false,
+  };
+  const res = await api.post('/analysis/run', requestPayload);
   return res.data;
 }
 
